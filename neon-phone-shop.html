@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NEON — магазин современных смартфонов. Выбирайте и заказывайте телефоны онлайн.">
+<title>NEON — магазин смартфонов</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#090b12;color:#fff;font-family:Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+.header{min-height:80px;padding:0 8%;display:flex;align-items:center;justify-content:space-between;background:#10131d;border-bottom:1px solid #252a39;position:sticky;top:0;z-index:5}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1px}.logo span{color:#8257ff}
+nav{display:flex;gap:30px}nav a{color:#b5b8c7;transition:.3s}nav a:hover{color:#956cff}
+.cart-button{background:#8257ff;padding:12px 20px;border-radius:10px;font-weight:bold;border:0;color:white;cursor:pointer}
+.cart-button span{background:#fff;color:#8257ff;padding:3px 7px;border-radius:20px;margin-left:5px}
+.hero{min-height:520px;padding:70px 8%;display:flex;align-items:center;justify-content:space-between;gap:40px;background:radial-gradient(circle at 80% 50%,#25204a,#090b12 60%)}
+.hero-content{max-width:570px}.hero-label,.subtitle{color:#9874ff;font-size:12px;font-weight:bold;letter-spacing:2px}
+.hero h1{font-size:clamp(42px,6vw,70px);line-height:1.1;margin:25px 0}.hero h1 span{color:#956aff}
+.hero p{color:#aeb2c2;line-height:1.8;margin-bottom:30px;font-size:16px}
+.main-button{display:inline-block;background:#8257ff;padding:16px 26px;border-radius:10px;font-weight:bold;transition:.3s}
+.main-button:hover,.add-button:hover{background:#a185ff;transform:translateY(-3px)}
+.hero-image{width:48%;height:340px;border-radius:20px;overflow:hidden;box-shadow:0 20px 70px #0008}
+.hero-image img{width:100%;height:100%;object-fit:cover}
+.container{padding:80px 8%}.section-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:30px}
+.section-heading h2{font-size:34px;margin-top:12px}.product-total{color:#a5a8b8}
+.search-form{display:flex;gap:12px;margin-bottom:25px}
+.search-form input{flex:1;min-width:0;background:#151925;border:1px solid #292e40;border-radius:10px;padding:16px;color:white;outline:none}
+.search-form input:focus{border-color:#8257ff}.search-form button{border:0;background:#8257ff;color:white;padding:0 25px;border-radius:10px;cursor:pointer;font-weight:bold}
+.categories{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:35px}
+.categories button{padding:11px 17px;background:#151925;border:1px solid #292e40;color:#b9bdcc;border-radius:30px;font-size:14px;cursor:pointer;transition:.3s}
+.categories button:hover,.categories button.active{background:#8257ff;border-color:#8257ff;color:white}
+.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;align-items:stretch}
+.product-card{min-width:0;background:#141824;border:1px solid #252b3a;border-radius:16px;overflow:hidden;transition:.3s;display:flex;flex-direction:column}
+.product-card:hover{transform:translateY(-7px);border-color:#8257ff;box-shadow:0 15px 35px #8257ff18}
+.product-image{width:100%;height:210px;position:relative;background:#1d2230;overflow:hidden;flex-shrink:0}
+.product-image img{display:block;width:100%;height:100%;object-fit:cover;transition:.4s}
+.product-card:hover .product-image img{transform:scale(1.07)}
+.product-category{position:absolute;top:12px;left:12px;background:#8257ff;padding:6px 10px;font-size:11px;border-radius:6px}
+.product-info{padding:18px;display:flex;flex-direction:column;flex:1}
+.brand{color:#9874ff;font-size:12px;margin-bottom:10px}.product-info h3{font-size:17px;min-height:42px}
+.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:20px}
+.product-bottom strong{font-size:17px}.add-button{width:40px;height:40px;border:0;border-radius:10px;background:#8257ff;color:white;font-size:25px;cursor:pointer;transition:.3s;flex-shrink:0}
+.empty{color:#aaa;padding:30px 0;grid-column:1/-1}
+.advantages{padding:60px 8%;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;background:#111521;text-align:center}
+.advantages span{font-size:35px}.advantages h3{margin:15px 0 10px}.advantages p{color:#aeb2c2;line-height:1.6}
+footer{padding:35px 8%;display:flex;align-items:center;justify-content:space-between;background:#090b12;border-top:1px solid #252a39}
+footer p{color:#85899b;font-size:13px}
+.cart-panel{position:fixed;inset:0;background:#0009;z-index:10;display:none;justify-content:flex-end}
+.cart-panel.open{display:flex}.cart-content{width:min(440px,100%);height:100%;background:#141824;padding:28px;overflow:auto;border-left:1px solid #303444}
+.cart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.close-cart{border:0;background:none;color:white;font-size:28px;cursor:pointer}
+.cart-item{display:flex;justify-content:space-between;gap:15px;padding:15px 0;border-bottom:1px solid #303444}
+.cart-item small{display:block;color:#aeb2c2;margin-top:6px}
+.remove{border:0;background:none;color:#ff8585;cursor:pointer}
+.cart-total{display:flex;justify-content:space-between;font-size:20px;font-weight:bold;margin:25px 0}
+.checkout{width:100%;border:0;background:#8257ff;color:white;padding:15px;border-radius:10px;font-weight:bold;cursor:pointer}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);background:#174d36;color:#9af0bd;padding:13px 20px;border-radius:10px;opacity:0;transition:.25s;z-index:20;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1000px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-image{width:45%}}
+@media(max-width:700px){.header{padding:15px 5%;height:auto;flex-wrap:wrap;gap:15px}nav{order:3;width:100%;justify-content:center;gap:20px}.hero{padding:55px 6%;flex-direction:column;align-items:flex-start}.hero-image{width:100%;height:260px}.container{padding:55px 5%}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product-image{height:150px}.product-info{padding:12px}.product-info h3{font-size:14px}.product-bottom strong{font-size:13px}.advantages{grid-template-columns:1fr}footer{flex-direction:column;gap:15px;text-align:center}.section-heading h2{font-size:26px}}
+@media(max-width:380px){.products{grid-template-columns:1fr}.search-form button{padding:0 15px}}
+</style>
+</head>
+<body>
+<header class="header">
+  <a class="logo" href="#">NEON<span>.</span></a>
+  <nav><a href="#home">Главная</a><a href="#catalog">Каталог</a><a href="#advantages">Преимущества</a></nav>
+  <button class="cart-button" id="openCart">Корзина <span id="cartCount">0</span></button>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-label">ТЕХНОЛОГИИ БУДУЩЕГО УЖЕ ЗДЕСЬ</div>
+    <h1>Твой новый<br><span>смартфон</span> ждёт</h1>
+    <p>Открой для себя мир современных технологий. Только популярные модели, честные цены и удобный выбор.</p>
+    <a class="main-button" href="#catalog">Выбрать смартфон →</a>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1200&q=85" alt="Современный смартфон">
+  </div>
+</section>
+
+<section class="container" id="catalog">
+  <div class="section-heading">
+    <div><div class="subtitle">НАШ АССОРТИМЕНТ</div><h2>Популярные модели</h2></div>
+    <div class="product-total" id="productTotal">0 товаров</div>
+  </div>
+  <form class="search-form" id="searchForm">
+    <input id="searchInput" type="search" placeholder="Найти смартфон..." aria-label="Поиск смартфона">
+    <button type="submit">Найти</button>
+  </form>
+  <div class="categories" id="categories">
+    <button class="active" data-category="Все">Все модели</button>
+    <button data-category="Apple">Apple</button>
+    <button data-category="Samsung">Samsung</button>
+    <button data-category="Xiaomi">Xiaomi</button>
+    <button data-category="Google">Google</button>
+  </div>
+  <div class="products" id="products"></div>
+</section>
+
+<section class="advantages" id="advantages">
+  <div><span>🚚</span><h3>Быстрая доставка</h3><p>Доставим заказ по Казахстану. Удобно и без лишних хлопот.</p></div>
+  <div><span>🛡️</span><h3>Гарантия качества</h3><p>Только проверенные устройства и гарантия на каждый смартфон.</p></div>
+  <div><span>💬</span><h3>Поддержка</h3><p>Поможем подобрать модель и ответим на ваши вопросы.</p></div>
+</section>
+</main>
+
+<footer><a class="logo" href="#">NEON<span>.</span></a><p>© 2026 NEON. Магазин смартфонов.</p><p>Сделано с заботой о технологиях</p></footer>
+
+<div class="cart-panel" id="cartPanel" aria-hidden="true">
+  <div class="cart-content">
+    <div class="cart-head"><h2>Ваша корзина</h2><button class="close-cart" id="closeCart" aria-label="Закрыть">×</button></div>
+    <div id="cartItems"></div>
+    <div class="cart-total"><span>Итого:</span><span id="cartTotal">0 ₸</span></div>
+    <button class="checkout" id="checkout">Оформить заказ</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const products = [
+ {id:1,brand:"Apple",name:"iPhone 16 Pro",price:649990,category:"Apple",image:"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=85"},
+ {id:2,brand:"Samsung",name:"Samsung Galaxy S25 Ultra",price:699990,category:"Samsung",image:"https://images.unsplash.com/photo-1706373662645-6f6f3b8c4f18?auto=format&fit=crop&w=800&q=85"},
+ {id:3,brand:"Xiaomi",name:"Xiaomi 14T Pro",price:329990,category:"Xiaomi",image:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=85"},
+ {id:4,brand:"Google",name:"Google Pixel 9 Pro",price:499990,category:"Google",image:"https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=800&q=85"},
+ {id:5,brand:"Apple",name:"iPhone 15",price:399990,category:"Apple",image:"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=85"},
+ {id:6,brand:"Samsung",name:"Samsung Galaxy Z Flip6",price:549990,category:"Samsung",image:"https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&q=85"},
+ {id:7,brand:"Xiaomi",name:"Redmi Note 14 Pro",price:159990,category:"Xiaomi",image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=85"},
+ {id:8,brand:"Google",name:"Google Pixel 8a",price:249990,category:"Google",image:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=85"}
+];
+let activeCategory="Все", cart=[];
+const money = value => new Intl.NumberFormat("ru-RU").format(value)+" ₸";
+const productsEl=document.getElementById("products");
+function renderProducts(){
+ const q=document.getElementById("searchInput").value.trim().toLowerCase();
+ const filtered=products.filter(p=>(activeCategory==="Все"||p.category===activeCategory)&&(`${p.name} ${p.brand}`.toLowerCase().includes(q)));
+ document.getElementById("productTotal").textContent=`${filtered.length} ${filtered.length===1?"товар":"товаров"}`;
+ productsEl.innerHTML=filtered.length?filtered.map(p=>`<article class="product-card">
+  <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="product-category">${p.category}</span></div>
+  <div class="product-info"><div class="brand">${p.brand}</div><h3>${p.name}</h3>
+  <div class="product-bottom"><strong>${money(p.price)}</strong><button class="add-button" data-add="${p.id}" aria-label="Добавить ${p.name} в корзину">+</button></div></div>
+ </article>`).join(""):`<p class="empty">Ничего не найдено. Попробуйте изменить запрос.</p>`;
+}
+function renderCart(){
+ const count=cart.reduce((s,item)=>s+item.qty,0);
+ document.getElementById("cartCount").textContent=count;
+ document.getElementById("cartItems").innerHTML=cart.length?cart.map(item=>`<div class="cart-item"><div><strong>${item.name}</strong><small>${money(item.price)} × ${item.qty}</small></div><div><strong>${money(item.price*item.qty)}</strong><br><button class="remove" data-remove="${item.id}">Удалить</button></div></div>`).join(""):'<p class="empty">Корзина пока пуста.</p>';
+ document.getElementById("cartTotal").textContent=money(cart.reduce((s,item)=>s+item.price*item.qty,0));
+}
+function showToast(message){const t=document.getElementById("toast");t.textContent=message;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+productsEl.addEventListener("click",e=>{const btn=e.target.closest("[data-add]");if(!btn)return;const p=products.find(x=>x.id===Number(btn.dataset.add));const item=cart.find(x=>x.id===p.id);if(item)item.qty++;else cart.push({...p,qty:1});renderCart();showToast("Товар добавлен в корзину")});
+document.getElementById("cartItems").addEventListener("click",e=>{const btn=e.target.closest("[data-remove]");if(!btn)return;cart=cart.filter(x=>x.id!==Number(btn.dataset.remove));renderCart()});
+document.getElementById("categories").addEventListener("click",e=>{const btn=e.target.closest("button[data-category]");if(!btn)return;activeCategory=btn.dataset.category;document.querySelectorAll("#categories button").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()});
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();renderProducts()});
+document.getElementById("searchInput").addEventListener("input",renderProducts);
+const panel=document.getElementById("cartPanel");
+document.getElementById("openCart").onclick=()=>{panel.classList.add("open");panel.setAttribute("aria-hidden","false")};
+document.getElementById("closeCart").onclick=()=>{panel.classList.remove("open");panel.setAttribute("aria-hidden","true")};
+panel.addEventListener("click",e=>{if(e.target===panel){panel.classList.remove("open");panel.setAttribute("aria-hidden","true")}});
+document.getElementById("checkout").onclick=()=>{if(!cart.length){showToast("Сначала добавьте товар в корзину");return}showToast("Заказ готов к оформлению — подключите форму или WhatsApp");};
+renderProducts();renderCart();
+</script>
+</body>
+</html>
